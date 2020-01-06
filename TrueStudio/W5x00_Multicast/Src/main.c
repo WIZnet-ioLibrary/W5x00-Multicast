@@ -26,6 +26,7 @@
 #include "stdio.h"
 #include "Application/Multicast/multicast.h"
 #include "wizchip_conf.h"
+#include "wizchip_init.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,13 +50,13 @@ SPI_HandleTypeDef hspi1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-wiz_NetInfo defaultNetInfo = { .mac = {0x00,0x08,0xdc,0xff,0xee,0xdd},
-							.ip = {192,168,0,130},
-							.sn = {255,255,255,0},
-							.gw = {192,168,0,254},
-							//.dns = {168, 126, 63, 1},
-							.dns = {8, 8, 8, 8},
-							.dhcp = NETINFO_STATIC};
+wiz_NetInfo defaultNetInfo = {.mac = {0x00, 0x08, 0xdc, 0xff, 0xee, 0xdd},
+                              .ip = {192, 168, 0, 130},
+                              .sn = {255, 255, 255, 0},
+                              .gw = {192, 168, 0, 254},
+                              //.dns = {168, 126, 63, 1},
+                              .dns = {8, 8, 8, 8},
+                              .dhcp = NETINFO_STATIC};
 uint8_t ethBuf0[2048];
 /* USER CODE END PV */
 
@@ -69,19 +70,17 @@ void print_network_information(void);
 
 int _write(int fd, char *str, int len)
 {
-	for(int i=0; i<len; i++)
-	{
-		HAL_UART_Transmit(&huart2, (uint8_t *)&str[i], 1, 0xFFFF);
-	}
-	return len;
+  for (int i = 0; i < len; i++)
+  {
+    HAL_UART_Transmit(&huart2, (uint8_t *)&str[i], 1, 0xFFFF);
+  }
+  return len;
 }
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
 
 /* USER CODE END 0 */
 
@@ -93,10 +92,9 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-  uint8_t multicast_ip[4]={239,255,255,250};
-  uint16_t multicast_port=1900;
+  uint8_t multicast_ip[4] = {239, 255, 255, 250};
+  uint16_t multicast_port = 1900;
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -120,8 +118,6 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-
-
   WIZCHIPInitialize();
 #if _WIZCHIP_ == W5100
   HAL_Delay(3000);
@@ -132,15 +128,12 @@ int main(void)
   //NETUNLOCK();
 #endif
 
-
-
-#if _WIZCHIP_ == W5200  ||  _WIZCHIP_ == W5500
+#if _WIZCHIP_ == W5200 || _WIZCHIP_ == W5500
   printf("version:%.2x\r\n", getVERSIONR());
 #endif
 
   wizchip_setnetinfo(&defaultNetInfo);
   print_network_information();
-
 
   /* USER CODE END 2 */
 
@@ -148,7 +141,7 @@ int main(void)
   while (1)
   {
 
-	  multicast_recv(0,ethBuf0,multicast_ip, multicast_port);
+    multicast_recv(0, ethBuf0, multicast_ip, multicast_port);
 
     /* USER CODE END WHILE */
 
@@ -182,8 +175,7 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -230,7 +222,6 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
-
 }
 
 /**
@@ -263,7 +254,6 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
-
 }
 
 /**
@@ -288,18 +278,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
 void print_network_information(void)
 {
-	wizchip_getnetinfo(&defaultNetInfo);
-	printf("Mac address: %02x:%02x:%02x:%02x:%02x:%02x\n\r",defaultNetInfo.mac[0],defaultNetInfo.mac[1],defaultNetInfo.mac[2],defaultNetInfo.mac[3],defaultNetInfo.mac[4],defaultNetInfo.mac[5]);
-	printf("IP address : %d.%d.%d.%d\n\r",defaultNetInfo.ip[0],defaultNetInfo.ip[1],defaultNetInfo.ip[2],defaultNetInfo.ip[3]);
-	printf("SM Mask	   : %d.%d.%d.%d\n\r",defaultNetInfo.sn[0],defaultNetInfo.sn[1],defaultNetInfo.sn[2],defaultNetInfo.sn[3]);
-	printf("Gate way   : %d.%d.%d.%d\n\r",defaultNetInfo.gw[0],defaultNetInfo.gw[1],defaultNetInfo.gw[2],defaultNetInfo.gw[3]);
-	printf("DNS Server : %d.%d.%d.%d\n\r",defaultNetInfo.dns[0],defaultNetInfo.dns[1],defaultNetInfo.dns[2],defaultNetInfo.dns[3]);
+  wizchip_getnetinfo(&defaultNetInfo);
+  printf("Mac address: %02x:%02x:%02x:%02x:%02x:%02x\n\r", defaultNetInfo.mac[0], defaultNetInfo.mac[1], defaultNetInfo.mac[2], defaultNetInfo.mac[3], defaultNetInfo.mac[4], defaultNetInfo.mac[5]);
+  printf("IP address : %d.%d.%d.%d\n\r", defaultNetInfo.ip[0], defaultNetInfo.ip[1], defaultNetInfo.ip[2], defaultNetInfo.ip[3]);
+  printf("SM Mask	   : %d.%d.%d.%d\n\r", defaultNetInfo.sn[0], defaultNetInfo.sn[1], defaultNetInfo.sn[2], defaultNetInfo.sn[3]);
+  printf("Gate way   : %d.%d.%d.%d\n\r", defaultNetInfo.gw[0], defaultNetInfo.gw[1], defaultNetInfo.gw[2], defaultNetInfo.gw[3]);
+  printf("DNS Server : %d.%d.%d.%d\n\r", defaultNetInfo.dns[0], defaultNetInfo.dns[1], defaultNetInfo.dns[2], defaultNetInfo.dns[3]);
 }
 /* USER CODE END 4 */
 
@@ -315,7 +304,7 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -324,7 +313,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
