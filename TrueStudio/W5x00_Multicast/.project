@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>W5X00-Multicast</name>
+	<name>W5X00_Multicast</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -74,7 +74,7 @@
 		<link>
 			<name>ioLibrary_Driver</name>
 			<type>2</type>
-			<location>D:/___WORK/__iEthernet/W5x00/W5x00-Multicast/ioLibrary_Driver</location>
+			<location>D:/wiznet/git/W5x00/W5x00-Multicast/ioLibrary_Driver</location>
 		</link>
 	</linkedResources>
 </projectDescription>
