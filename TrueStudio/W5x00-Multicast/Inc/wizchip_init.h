@@ -7,15 +7,18 @@
 
 
 
-
-
-
 /* CS */
 extern SPI_HandleTypeDef hspi1;
 #define WIZCHIP_SPI  			hspi1
 #define WIZCHIP_CS_PIN			GPIO_PIN_6
 #define WIZCHIP_CS_PORT			GPIOB
 
+
+#define W5x00_RESET_PIN		    GPIO_PIN_7
+#define W5x00_RESET_PORT		GPIOC
+
+void resetAssert(void);
+void resetDeassert(void);
 
 void WIZCHIPInitialize();
 

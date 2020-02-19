@@ -41,6 +41,15 @@ void WIZCHIPInitialize(){
 
 }
 
+void resetAssert(void)
+{
+	HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_RESET);
+}
+
+void resetDeassert(void)
+{
+	HAL_GPIO_WritePin(W5x00_RESET_PORT, W5x00_RESET_PIN, GPIO_PIN_SET);
+}
 
 
 
